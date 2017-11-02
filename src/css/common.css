@@ -1,16 +1,41 @@
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+a{
+  text-decoration: none;
+  color: currentColor;
+}
+ul,
+ol,
+li{
+  list-style: none;
+}
+
 #main{
   font-family: PingFang SC,Helvetica Neue,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif;
   line-height: normal;
 }
-#main .title{
 
+#main .title h2{
+  font-size: 20px;
+  color: #191829;
+  text-align: center;
+  font-weight: 400;
 }
+
 #main .title p{
   margin-bottom: 0;
   color: #a9b0bd;
   font-size: 15px;
   font-weight: 400;
 }
-#main .title h2{
 
+@media (min-width: 992px){
+  #main .title h2{
+    font-size: 34px;
+  }  
 }

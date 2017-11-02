@@ -29,55 +29,35 @@ var shiftImg = {
          newX = 0
       this.move(newX)
     })
+    this.$container.on('click',(e)=>{
+      console.log(this.$container[0].getBoundingClientRect())
+      console.dir(e)
+    })
   },
   move:function(x){
-    this.$handle[0].style.left = x+'px'
-    this.$rightImg[0].style.width = x+'px'
-    this.$leftImg[0].style.width = (952 -x)+'px'
+    if($(document).width() >= 992){
+      this.$handle[0].style.left = x+'px'
+      this.$rightImg[0].style.width = x+'px'
+      this.$leftImg[0].style.width = (952 -x)+'px'
+    }
+    
   }
 }
 shiftImg.init();
 
-
-
-  // html: {
-  //    handle: document.querySelectorAll('.handle')[0],
-  //    tracker: document.querySelectorAll('.handle .tracker')[0],
-  //    code: document.querySelectorAll('.code')[0],
-  //    view: document.querySelectorAll('.view')[0],
-  //    example: document.querySelectorAll('.example')[0],
-  //    container: document.querySelectorAll('.container')[0]
-  // },
- //  dragging: false,
-  // init: function(){
-  //    this.addEvents()
-  //    this.move(250)
-  // },
-  // addEvents: function(){
-  //    var that = this
-  //    this.html.handle.addEventListener('mousedown', function(e){
-  //      console.log('mousedown')
-  //       that.html.tracker.style.display = 'block'
-  //      //  that.dragging = true
-  //    }) 
-  //    this.html.tracker.addEventListener('mouseup', function(){
-  //       that.html.tracker.style.display = 'none'
-  //      //  that.dragging = false
-  //    }) 
-  //    this.html.tracker.addEventListener('mousemove', function(event){
-  //       var cBox = that.html.container.getBoundingClientRect();
-  //       var hBox = that.html.handle.getBoundingClientRect();
-  //       var newX = event.clientX-cBox.left
-        
-  //       if(newX > cBox.width-hBox.width)
-  //          newX = cBox.width-hBox.width
-     
-  //       if(newX < 0)
-  //          newX = 0
-  //       that.move(newX)
-  //    })   
-  // },
-  // move: function(x){
-  //    this.html.handle.style.left = x+'px'
-  //    this.html.example.style.width = (x)+'px'
-  // }
+var scrollChangeColor = {
+  init:function($element){
+    this.$element = $element
+    this.bind()
+  },
+  bind:function(){
+    $(document).on('scroll',()=> {
+      if($(document).scrollTop() <= 30){
+          this.$element.removeClass('scroll')
+      } else {
+          this.$element.addClass('scroll')
+      }
+    })
+  }
+}
+scrollChangeColor.init($('#nav'))
