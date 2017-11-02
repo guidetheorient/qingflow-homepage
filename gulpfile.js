@@ -6,14 +6,13 @@ const sourcemaps = require("gulp-sourcemaps");
 const rev = require('gulp-rev');//对文件名加MD5后缀
 const watch = require('gulp-watch');//gulp.watch监控不了文件增删，这个插件可以
 const plumber = require('gulp-plumber');
-
-
+const concat = require('gulp-concat')
+const useref = require('gulp-useref')
 
 
 //html:压缩 src => dist
 const htmlmin = require('gulp-htmlmin');//html压缩组件
 gulp.task('minifyHtml',function(){
-  console.log('minifyHTML')
   var options = {
       removeComments: true,//清除HTML注释
       collapseBooleanAttributes: true,//省略布尔属性的值 <input checked="true"/> ==> <input />
@@ -27,6 +26,7 @@ gulp.task('minifyHtml',function(){
   };
   gulp.src('dist/*.html').pipe(clean()); 
   return gulp.src('src/*.html')
+      .pipe(useref())
       .pipe(htmlmin(options))
       .pipe(gulp.dest('dist'));
 });
@@ -37,7 +37,8 @@ const autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('dist:css',function () {
   gulp.src(['dist/css/*']).pipe(clean());
-  return gulp.src('src/css/*.css')
+  return gulp.src('src/css/**/*.css')
+            .pipe(concat('merge.css'))
             .pipe(sourcemaps.init())
             .pipe(csso())
             .pipe(autoprefixer({
@@ -66,13 +67,14 @@ gulp.task('dist:js',function () {
              .pipe(gulp.dest('dist/rev/js'))
 })
 
-gulp.task('delCSS',function(){
-  return  gulp.src(['dist/css/lib/**/*']).pipe(clean());
-})
-gulp.task('copyCSS',['delCSS'],function(){
-  return gulp.src('src/css/lib/**/*')
-    .pipe(gulp.dest('dist/css/lib/'))
-})
+// gulp.task('delCSS',function(){
+//   return  gulp.src(['dist/css/lib/**/*']).pipe(clean());
+// })
+// gulp.task('copyCSS',['delCSS'],function(){
+//   return gulp.src('src/css/lib/**/*')
+//     .pipe(plumber())
+//     .pipe(gulp.dest('/dist/css/lib/'))
+// })
 
 gulp.task('delJS',function(){
   return  gulp.src(['dist/js/lib/**/*']).pipe(clean());
@@ -80,7 +82,7 @@ gulp.task('delJS',function(){
 gulp.task('copyJS',['delJS'],function(){
   return gulp.src('src/js/lib/**/*')
     .pipe(plumber())
-    .pipe(gulp.dest('dist/js/lib/'))
+    .pipe(gulp.dest('dist/js/lib'))
 })
 
 gulp.task('delAssets',function(){
@@ -89,7 +91,7 @@ gulp.task('delAssets',function(){
 gulp.task('copyAssets',['delAssets'],function(){
   return gulp.src('src/assets/**/*')
     .pipe(plumber())
-    .pipe(gulp.dest('dist/assets/'))
+    .pipe(gulp.dest('dist/assets'))
 })
 
 //html，针对js,css,img
@@ -99,7 +101,7 @@ gulp.task('rev',['dist:css','dist:js','minifyHtml'], function() {
   .pipe(revCollector({replaceReved:true }))
   .pipe(gulp.dest('dist'));
 })
-gulp.task('copy',['copyJS','copyCSS','copyAssets'])
+gulp.task('copy',['copyJS','copyAssets'])
 gulp.task('start',['rev','copy'])
 
 gulp.task('revHtml',['minifyHtml'],function(){
